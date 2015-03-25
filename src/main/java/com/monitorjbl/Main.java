@@ -55,13 +55,23 @@ public class Main {
   @Transactional
   public Customer update(Long id) {
     Customer c = repo.findById(id);
-    c.setName("Hill Propane");
-    c.setBillingLevel(Customer.BillingLevel.PREMIUM);
-    c.setContacts(newArrayList("Peggy", "Bobby"));
-    for (LineItem li : getOnlyElement(c.getReceipts()).getLineItems()) {
-      li.setName("Vegan-" + li.getName());
-      li.setValue(li.getValue() * 1.75);
+
+    Receipt r = getOnlyElement(c.getReceipts());
+    List<LineItem> lineItems = newArrayList();
+    for (LineItem li : r.getLineItems()) {
+      lineItems.add(li.copyBuilder()
+          .name("Vegan-" + li.getName())
+          .value(li.getValue() * 1.75)
+          .build());
     }
+
+    c = c.copyBuilder()
+        .name("Hill Propane")
+        .billingLevel(Customer.BillingLevel.PREMIUM)
+        .contacts(newArrayList("Peggy", "Bobby"))
+        .receipts(newArrayList(r.copyBuilder().lineItems(lineItems).build()))
+        .build();
+
     System.out.println(new Gson().toJson(c));
     return repo.save(c);
   }
@@ -70,7 +80,7 @@ public class Main {
   public Customer getCustomerAtVersion(Long customerId, Number revisionId) {
     AuditReader reader = AuditReaderFactory.get(em);
     Customer rev = reader.find(Customer.class, customerId, revisionId);
-    System.out.println("rev"+revisionId + ": " + new Gson().toJson(rev));
+    System.out.println("rev" + revisionId + ": " + new Gson().toJson(rev));
     return rev;
   }
 

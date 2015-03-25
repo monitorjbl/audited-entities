@@ -11,6 +11,8 @@ import javax.persistence.OneToMany;
 import java.util.Date;
 import java.util.List;
 
+import static com.google.common.collect.Lists.newArrayList;
+
 @Entity
 @Audited
 public class Receipt {
@@ -21,7 +23,7 @@ public class Receipt {
   @OneToMany(targetEntity = LineItem.class, cascade = {CascadeType.ALL, CascadeType.PERSIST, CascadeType.MERGE})
   private List<LineItem> lineItems;
 
-  public Receipt() {
+  Receipt() {
   }
 
   private Receipt(Builder builder) {
@@ -34,7 +36,7 @@ public class Receipt {
     return id;
   }
 
-  public void setId(Long id) {
+  private void setId(Long id) {
     this.id = id;
   }
 
@@ -42,7 +44,7 @@ public class Receipt {
     return date;
   }
 
-  public void setDate(Date date) {
+  private void setDate(Date date) {
     this.date = date;
   }
 
@@ -50,8 +52,12 @@ public class Receipt {
     return lineItems;
   }
 
-  public void setLineItems(List<LineItem> lineItems) {
+  private void setLineItems(List<LineItem> lineItems) {
     this.lineItems = lineItems;
+  }
+
+  public Builder copyBuilder() {
+    return new Builder(this);
   }
 
   public static Builder builder() {
@@ -61,9 +67,15 @@ public class Receipt {
   public static final class Builder {
     private Long id;
     private Date date;
-    private List<LineItem> lineItems;
+    private List<LineItem> lineItems = newArrayList();
 
     private Builder() {
+    }
+
+    private Builder(Receipt receipt) {
+      id = receipt.id;
+      date = receipt.date;
+      lineItems = receipt.lineItems;
     }
 
     public Builder id(Long id) {

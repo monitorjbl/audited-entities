@@ -15,7 +15,7 @@ public class LineItem {
   private String name;
   private Double value;
 
-  public LineItem() {
+  LineItem() {
   }
 
   private LineItem(Builder builder) {
@@ -28,7 +28,7 @@ public class LineItem {
     return id;
   }
 
-  public void setId(Long id) {
+  private void setId(Long id) {
     this.id = id;
   }
 
@@ -36,7 +36,7 @@ public class LineItem {
     return name;
   }
 
-  public void setName(String name) {
+  private void setName(String name) {
     this.name = name;
   }
 
@@ -44,8 +44,12 @@ public class LineItem {
     return value;
   }
 
-  public void setValue(Double value) {
+  private void setValue(Double value) {
     this.value = value;
+  }
+
+  public Builder copyBuilder() {
+    return new Builder(this);
   }
 
   public static Builder builder() {
@@ -58,6 +62,12 @@ public class LineItem {
     private Double value;
 
     private Builder() {
+    }
+
+    private Builder(LineItem lineItem) {
+      id = lineItem.id;
+      name = lineItem.name;
+      value = lineItem.value;
     }
 
     public Builder id(Long id) {

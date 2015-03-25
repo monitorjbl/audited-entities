@@ -11,7 +11,7 @@ public class User {
   private Long id;
   private String name;
 
-  public User() {
+  User() {
   }
 
   private User(Builder builder) {
@@ -23,7 +23,7 @@ public class User {
     return id;
   }
 
-  public void setId(Long id) {
+  private void setId(Long id) {
     this.id = id;
   }
 
@@ -31,8 +31,12 @@ public class User {
     return name;
   }
 
-  public void setName(String name) {
+  private void setName(String name) {
     this.name = name;
+  }
+
+  public Builder copyBuilder() {
+    return new Builder(this);
   }
 
   public static Builder builder() {
@@ -44,6 +48,11 @@ public class User {
     private String name;
 
     private Builder() {
+    }
+
+    private Builder(User user) {
+      id = user.id;
+      name = user.name;
     }
 
     public Builder id(Long id) {

@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.util.List;
 
+import static com.google.common.collect.Lists.newArrayList;
+
 @Entity
 @Audited
 public class Customer {
@@ -30,7 +32,7 @@ public class Customer {
   @OneToMany(targetEntity = Receipt.class, cascade = {CascadeType.ALL, CascadeType.PERSIST, CascadeType.MERGE})
   private List<Receipt> receipts;
 
-  public Customer() {
+  Customer() {
   }
 
   private Customer(Builder builder) {
@@ -42,15 +44,11 @@ public class Customer {
     setReceipts(builder.receipts);
   }
 
-  public static Builder builder() {
-    return new Builder();
-  }
-
   public Long getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  private void setId(Long id) {
     this.id = id;
   }
 
@@ -58,7 +56,7 @@ public class Customer {
     return name;
   }
 
-  public void setName(String name) {
+  private void setName(String name) {
     this.name = name;
   }
 
@@ -66,7 +64,7 @@ public class Customer {
     return account;
   }
 
-  public void setAccount(String account) {
+  private void setAccount(String account) {
     this.account = account;
   }
 
@@ -74,7 +72,7 @@ public class Customer {
     return billingLevel;
   }
 
-  public void setBillingLevel(BillingLevel billingLevel) {
+  private void setBillingLevel(BillingLevel billingLevel) {
     this.billingLevel = billingLevel;
   }
 
@@ -82,7 +80,7 @@ public class Customer {
     return contacts;
   }
 
-  public void setContacts(List<String> contacts) {
+  private void setContacts(List<String> contacts) {
     this.contacts = contacts;
   }
 
@@ -90,8 +88,16 @@ public class Customer {
     return receipts;
   }
 
-  public void setReceipts(List<Receipt> receipts) {
+  private void setReceipts(List<Receipt> receipts) {
     this.receipts = receipts;
+  }
+
+  public Builder copyBuilder() {
+    return new Builder(this);
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   public static final class Builder {
@@ -99,10 +105,19 @@ public class Customer {
     private String name;
     private String account;
     private BillingLevel billingLevel;
-    private List<String> contacts;
-    private List<Receipt> receipts;
+    private List<String> contacts = newArrayList();
+    private List<Receipt> receipts = newArrayList();
 
     private Builder() {
+    }
+
+    private Builder(Customer customer) {
+      id = customer.id;
+      name = customer.name;
+      account = customer.account;
+      billingLevel = customer.billingLevel;
+      contacts = customer.contacts;
+      receipts = customer.receipts;
     }
 
     public Builder id(Long id) {
