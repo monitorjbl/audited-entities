@@ -36,9 +36,17 @@ public class JpaConfig {
   @Bean
   public DataSource dataSource() {
     DriverManagerDataSource dataSource = new DriverManagerDataSource();
-    dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-    dataSource.setUrl("jdbc:mysql://localhost:3306/test");
-    dataSource.setUsername("root");
+
+    //mysql config
+//    dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+//    dataSource.setUrl("jdbc:mysql://localhost:3306/test");
+//    dataSource.setUsername("root");
+//    dataSource.setPassword("");
+
+    //h2 config
+    dataSource.setDriverClassName("org.h2.Driver");
+    dataSource.setUrl("jdbc:h2:./target/db");
+    dataSource.setUsername("sa");
     dataSource.setPassword("");
     return dataSource;
   }
